@@ -4,7 +4,7 @@
 ThreadPool::ThreadPool(size_t threadCount) : terminated_(false) {
     for (size_t i = 0; i < threadCount; ++i) {
         threads_.emplace_back([&terminated_ = terminated_, &mutex_ = mutex_, &empty_ = empty_, &tasks_ = tasks_] {
-            while (!terminated_.load()) {
+            while (true) {
                 bool taskExists = false;
                 std::function<void()> func;
                 {
@@ -16,6 +16,8 @@ ThreadPool::ThreadPool(size_t threadCount) : terminated_(false) {
                         taskExists = true;
                         func = tasks_.front();
                         tasks_.pop_front();
+                    } else if(terminated_.load() && tasks_.empty()) {
+                        return;
                     }
                 }
                 if (taskExists) {
