@@ -19,6 +19,8 @@ namespace Search {
      * @param predicate the predicate to check whether to call a callback on a filepath or not
      * @param callback the callback to be called when predicate returns true
      */
-    void searchDir(ThreadPool &pool, std::filesystem::path dirPath, std::function<bool(std::filesystem::path)> predicate,
-                   std::function<void()> callback);
+    void searchDir(ThreadPool &pool, std::filesystem::path dirPath,
+                   const std::function<bool(std::filesystem::path)> &predicate,
+                   const std::function<void(std::filesystem::path)> &callback);
+
 }
